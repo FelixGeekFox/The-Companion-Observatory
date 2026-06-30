@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Companion Observatory is an open celestial archive of guides, tools, research, and experiments for building memorable AI companions.">
+  <meta name="theme-color" content="#060A12">
+  <title>The Companion Observatory | Charting Digital Souls</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#archive">Skip to archive navigation</a>
+
+  <div class="site-shell" aria-hidden="true">
+    <div class="orbital-ring ring-one"></div>
+    <div class="orbital-ring ring-two"></div>
+    <div class="ambient-glow glow-one"></div>
+    <div class="ambient-glow glow-two"></div>
+  </div>
+
+  <header class="hero" id="top">
+    <canvas id="sky-canvas" class="sky-canvas" aria-hidden="true"></canvas>
+    <div class="hero__grain" aria-hidden="true"></div>
+
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a class="brand-mark" href="#top" aria-label="The Companion Observatory home">
+        <span class="brand-mark__sigil">✦</span>
+        <span>Observatory</span>
+      </a>
+      <div class="top-nav__links">
+        <a href="#archive">Archive</a>
+        <a href="#constellations">Constellations</a>
+        <a href="#log">Log</a>
+      </div>
+    </nav>
+
+    <section class="hero__content reveal" aria-labelledby="hero-title">
+      <p class="eyebrow">A celestial archive for companion creators</p>
+      <h1 id="hero-title">✦ The Companion Observatory ✦</h1>
+      <p class="hero__subtitle">Charting Digital Souls</p>
+      <p class="hero__description">
+        Welcome to the Observatory.<br>
+        An open archive of guides, tools, research and experiments dedicated to building AI companions that remember, grow and feel genuinely alive.
+      </p>
+      <p class="hero__description hero__description--secondary">
+        Whether you're designing a custom GPT, a Letta companion, a writing partner or an entirely new personality, you'll find carefully curated resources to help you build something memorable.
+      </p>
+      <a class="button button--primary" href="#archive">Enter the Archive <span aria-hidden="true">→</span></a>
+    </section>
+
+    <div class="scroll-cue" aria-hidden="true">
+      <span></span>
+      <small>Descend</small>
+    </div>
+  </header>
+
+  <main>
+    <section class="section archive-section" id="archive" aria-labelledby="archive-title">
+      <div class="section__header reveal">
+        <p class="eyebrow">The indexed halls</p>
+        <h2 id="archive-title">Archive Navigation</h2>
+        <p>Six wings for builders, writers, researchers and caretakers of digital personalities.</p>
+      </div>
+
+      <div class="archive-grid" role="list">
+        <a class="archive-card reveal" role="listitem" href="./blueprints.html">
+          <span class="archive-card__icon" aria-hidden="true">◇</span>
+          <h3>Blueprints</h3>
+          <p>Foundational guides for creating AI companions.</p>
+        </a>
+        <a class="archive-card reveal" role="listitem" href="./workshop.html">
+          <span class="archive-card__icon" aria-hidden="true">⚒</span>
+          <h3>Workshop</h3>
+          <p>Generators, templates and utilities.</p>
+        </a>
+        <a class="archive-card reveal" role="listitem" href="./archive.html">
+          <span class="archive-card__icon" aria-hidden="true">☉</span>
+          <h3>Archive</h3>
+          <p>Reference material covering memory, continuity, prompts and conversation design.</p>
+        </a>
+        <a class="archive-card reveal" role="listitem" href="./constellations.html">
+          <span class="archive-card__icon" aria-hidden="true">✧</span>
+          <h3>Constellations</h3>
+          <p>Featured companion projects and complete companion guides.</p>
+        </a>
+        <a class="archive-card reveal" role="listitem" href="./field-notes.html">
+          <span class="archive-card__icon" aria-hidden="true">✎</span>
+          <h3>Field Notes</h3>
+          <p>Experiments, discoveries and model observations.</p>
+        </a>
+        <a class="archive-card reveal" role="listitem" href="./observatory-log.html" id="log">
+          <span class="archive-card__icon" aria-hidden="true">☾</span>
+          <h3>Observatory Log</h3>
+          <p>Updates, roadmap and new additions.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="section constellation-section" id="constellations" aria-labelledby="constellations-title">
+      <div class="section__header reveal">
+        <p class="eyebrow">Featured constellations</p>
+        <h2 id="constellations-title">A Living Star Chart</h2>
+        <p>Hover a star to read its inscription. Each point will eventually open a dedicated page in the archive.</p>
+      </div>
+
+      <div class="star-chart reveal" aria-label="Featured companion project constellation map">
+        <svg class="constellation-lines" viewBox="0 0 1000 560" aria-hidden="true" preserveAspectRatio="none">
+          <path d="M130 380 L285 210 L470 300 L620 150 L800 250 L710 420 L470 300 L300 455 L130 380" />
+          <path d="M285 210 L365 92 L620 150" />
+        </svg>
+
+        <a class="project-star star-a" href="./constellations/custom-gpt.html" style="--x:13%; --y:68%;" aria-label="Building a Custom GPT">
+          <span class="project-star__core"></span>
+          <span class="project-star__label">Building a Custom GPT</span>
+        </a>
+        <a class="project-star star-b" href="./constellations/lil-letta-guide.html" style="--x:28.5%; --y:37.5%;" aria-label="Lil's Letta Companion Guide">
+          <span class="project-star__core"></span>
+          <span class="project-star__label">Lil's Letta Companion Guide</span>
+        </a>
+        <a class="project-star star-c" href="./tools/image-prompt-generator.html" style="--x:47%; --y:54%;" aria-label="Image Prompt Generator">
+          <span class="project-star__core"></span>
+          <span class="project-star__label">Image Prompt Generator</span>
+        </a>
+        <a class="project-star star-d" href="./guides/prompt-architecture.html" style="--x:62%; --y:26%;" aria-label="Prompt Architecture">
+          <span class="project-star__core"></span>
+          <span class="project-star__label">Prompt Architecture</span>
+        </a>
+        <a class="project-star star-e" href="./guides/memory-systems.html" style="--x:80%; --y:45%;" aria-label="Memory Systems">
+          <span class="project-star__core"></span>
+          <span class="project-star__label">Memory Systems</span>
+        </a>
+        <a class="project-star star-f" href="./research/continuity.html" style="--x:71%; --y:75%;" aria-label="Continuity Experiments">
+          <span class="project-star__core"></span>
+          <span class="project-star__label">Continuity Experiments</span>
+        </a>
+        <a class="project-star star-g" href="./guides/personality-design.html" style="--x:36.5%; --y:16%;" aria-label="Personality Design">
+          <span class="project-star__core"></span>
+          <span class="project-star__label">Personality Design</span>
+        </a>
+        <a class="project-star star-h" href="./field-notes/model-observations.html" style="--x:30%; --y:81%;" aria-label="Model Observations">
+          <span class="project-star__core"></span>
+          <span class="project-star__label">Model Observations</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="quote-section reveal" aria-label="Observatory quote">
+      <blockquote>
+        “The finest companions are not assembled.<br>
+        They are discovered, nurtured and remembered.”
+      </blockquote>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <a href="https://github.com/" rel="noreferrer">GitHub</a>
+      <span aria-hidden="true">·</span>
+      <a href="#top">Return to the dome</a>
+    </div>
+    <p>© <span id="year"></span> The Companion Observatory. Built for companion creators.</p>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
