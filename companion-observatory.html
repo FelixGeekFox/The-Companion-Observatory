@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Companion Observatory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#060A12;
+    --bg-mid:#0B1220;
+    --bg-soft:#111827;
+    --gold:#D8B76A;
+    --gold-dim:#9C8350;
+    --ivory:#F5F1E8;
+    --starlight:#7CB7E8;
+    --lavender:#B7B8FF;
+    --line:rgba(216,183,106,0.22);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      radial-gradient(ellipse 1200px 800px at 15% -10%, rgba(124,183,232,0.07), transparent 60%),
+      radial-gradient(ellipse 1000px 700px at 90% 10%, rgba(183,184,255,0.05), transparent 60%),
+      linear-gradient(180deg, var(--bg-deep), var(--bg-mid) 40%, var(--bg-soft));
+    color:var(--ivory);
+    font-family:'Inter', sans-serif;
+    font-weight:300;
+    line-height:1.7;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* star field */
+  .stars{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+  }
+  .stars span{
+    position:absolute;
+    width:2px; height:2px;
+    background:var(--ivory);
+    border-radius:50%;
+    opacity:0.35;
+    animation:twinkle 6s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:0.15;}
+    50%{opacity:0.75;}
+  }
+
+  .constellation-lines{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.35;
+  }
+
+  .veil{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, transparent 1px, transparent 3px);
+    mix-blend-mode:overlay;
+  }
+
+  .wrap{position:relative; z-index:1;}
+
+  section{
+    max-width:1080px;
+    margin:0 auto;
+    padding:120px 32px;
+  }
+
+  .fade-in{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity 1.1s ease, transform 1.1s ease;
+  }
+  .fade-in.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  h1,h2,h3{
+    font-family:'Cinzel', serif;
+    color:var(--ivory);
+    font-weight:500;
+    letter-spacing:0.04em;
+  }
+
+  .eyebrow{
+    font-family:'Inter', sans-serif;
+    font-size:11px;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:28px; height:1px;
+    background:var(--gold-dim);
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:60px 32px;
+    position:relative;
+  }
+
+  .hero-glyph{
+    width:88px; height:88px;
+    margin-bottom:36px;
+    opacity:0.9;
+    animation:slowspin 90s linear infinite;
+  }
+  @keyframes slowspin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+  }
+
+  .hero h1{
+    font-size:clamp(2.6rem, 6vw, 5rem);
+    font-weight:500;
+    margin-bottom:22px;
+    text-shadow:0 0 40px rgba(216,183,106,0.25);
+  }
+
+  .hero .sub{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:clamp(1.1rem, 2vw, 1.5rem);
+    color:var(--starlight);
+    max-width:620px;
+    margin-bottom:8px;
+    font-weight:400;
+  }
+
+  .hero p.lede{
+    max-width:560px;
+    color:rgba(245,241,232,0.65);
+    font-size:1.02rem;
+    margin-top:24px;
+  }
+
+  .hero-scroll{
+    position:absolute;
+    bottom:48px;
+    font-size:11px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--gold-dim);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .hero-scroll .line{
+    width:1px; height:36px;
+    background:linear-gradient(to bottom, var(--gold), transparent);
+    animation:drip 2.4s ease-in-out infinite;
+  }
+  @keyframes drip{
+    0%{opacity:0.2; transform:scaleY(0.4); transform-origin:top;}
+    50%{opacity:1; transform:scaleY(1); transform-origin:top;}
+    100%{opacity:0.2; transform:scaleY(0.4); transform-origin:top;}
+  }
+
+  /* ===== INTRO / PHILOSOPHY ===== */
+  .philosophy{
+    text-align:center;
+  }
+  .philosophy h2{
+    font-size:clamp(1.7rem, 3vw, 2.3rem);
+    margin-bottom:30px;
+  }
+  .philosophy .lead-text{
+    font-family:'Cormorant Garamond', serif;
+    font-size:clamp(1.25rem, 2.2vw, 1.6rem);
+    color:var(--ivory);
+    max-width:760px;
+    margin:0 auto 24px;
+    font-weight:400;
+  }
+  .philosophy p{
+    color:rgba(245,241,232,0.62);
+    max-width:640px;
+    margin:0 auto;
+    font-size:0.98rem;
+  }
+  .divider{
+    width:1px;
+    height:60px;
+    background:linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+    margin:50px auto;
+  }
+
+  /* ===== THE TWO PILLARS ===== */
+  .pillars-intro{text-align:center; margin-bottom:64px;}
+  .pillars-intro h2{font-size:clamp(1.7rem,3vw,2.3rem);}
+
+  .pillars{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+  }
+  @media (max-width:760px){.pillars{grid-template-columns:1fr;}}
+
+  .pillar{
+    border:1px solid var(--line);
+    background:linear-gradient(160deg, rgba(216,183,106,0.04), transparent 70%);
+    padding:42px 36px;
+    position:relative;
+    transition:border-color 0.5s ease, box-shadow 0.5s ease;
+  }
+  .pillar:hover{
+    border-color:rgba(216,183,106,0.5);
+    box-shadow:0 0 50px rgba(216,183,106,0.08);
+  }
+  .pillar .num{
+    font-family:'Cinzel', serif;
+    font-size:0.75rem;
+    color:var(--gold-dim);
+    letter-spacing:0.2em;
+    margin-bottom:18px;
+    display:block;
+  }
+  .pillar h3{
+    font-size:1.5rem;
+    margin-bottom:16px;
+    color:var(--gold);
+  }
+  .pillar p{
+    color:rgba(245,241,232,0.68);
+    font-size:0.96rem;
+  }
+
+  /* ===== CONSTELLATION GRID (the documents) ===== */
+  .grid-intro{text-align:center; margin-bottom:24px;}
+  .grid-intro h2{font-size:clamp(1.7rem,3vw,2.3rem); margin-bottom:18px;}
+  .grid-intro p{
+    max-width:600px;
+    margin:0 auto;
+    color:rgba(245,241,232,0.6);
+    font-size:0.97rem;
+  }
+
+  .star-map{
+    margin-top:70px;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  @media (max-width:900px){.star-map{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:600px){.star-map{grid-template-columns:1fr;}}
+
+  .star-card{
+    background:var(--bg-mid);
+    padding:42px 32px;
+    position:relative;
+    transition:background 0.5s ease;
+    overflow:hidden;
+  }
+  .star-card::before{
+    content:"";
+    position:absolute;
+    top:-40%; left:-40%;
+    width:180%; height:180%;
+    background:radial-gradient(circle at 30% 20%, rgba(216,183,106,0.08), transparent 55%);
+    opacity:0;
+    transition:opacity 0.6s ease;
+  }
+  .star-card:hover::before{opacity:1;}
+  .star-card:hover{background:#0E1626;}
+
+  .star-card .glyph{
+    width:36px; height:36px;
+    margin-bottom:22px;
+    color:var(--gold);
+    opacity:0.85;
+  }
+  .star-card .tag{
+    font-size:10.5px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--starlight);
+    margin-bottom:10px;
+  }
+  .star-card h3{
+    font-size:1.25rem;
+    color:var(--ivory);
+    margin-bottom:14px;
+    font-weight:500;
+  }
+  .star-card p{
+    color:rgba(245,241,232,0.6);
+    font-size:0.92rem;
+  }
+  .star-card .essence{
+    margin-top:18px;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color:var(--lavender);
+    font-size:0.95rem;
+  }
+
+  /* ===== THE RITUAL (process timeline) ===== */
+  .ritual-intro{text-align:center; margin-bottom:80px;}
+  .ritual-intro h2{font-size:clamp(1.7rem,3vw,2.3rem); margin-bottom:18px;}
+  .ritual-intro p{max-width:580px; margin:0 auto; color:rgba(245,241,232,0.6); font-size:0.97rem;}
+
+  .timeline{
+    position:relative;
+    padding-left:48px;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:11px; top:6px; bottom:6px;
+    width:1px;
+    background:linear-gradient(to bottom, var(--gold-dim), rgba(216,183,106,0.08));
+  }
+  .tl-step{
+    position:relative;
+    padding-bottom:52px;
+  }
+  .tl-step:last-child{padding-bottom:0;}
+  .tl-step::before{
+    content:"";
+    position:absolute;
+    left:-48px; top:4px;
+    width:9px; height:9px;
+    border-radius:50%;
+    background:var(--bg-deep);
+    border:1px solid var(--gold);
+    box-shadow:0 0 12px rgba(216,183,106,0.5);
+  }
+  .tl-step .step-label{
+    font-family:'Cinzel', serif;
+    font-size:0.7rem;
+    letter-spacing:0.2em;
+    color:var(--gold-dim);
+    margin-bottom:8px;
+    display:block;
+  }
+  .tl-step h3{
+    font-size:1.25rem;
+    margin-bottom:10px;
+    color:var(--ivory);
+    font-weight:500;
+  }
+  .tl-step p{
+    color:rgba(245,241,232,0.62);
+    font-size:0.94rem;
+    max-width:560px;
+  }
+
+  /* ===== HIERARCHY DIAGRAM ===== */
+  .hierarchy-intro{text-align:center; margin-bottom:60px;}
+  .hierarchy-intro h2{font-size:clamp(1.7rem,3vw,2.3rem); margin-bottom:18px;}
+  .hierarchy-intro p{max-width:600px; margin:0 auto; color:rgba(245,241,232,0.6); font-size:0.97rem;}
+
+  .orbit{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0;
+  }
+  .orbit-tier{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:18px 30px;
+    border:1px solid var(--line);
+    background:var(--bg-mid);
+    margin-bottom:0;
+    width:100%;
+    max-width:520px;
+    justify-content:space-between;
+    transition:border-color 0.4s ease;
+  }
+  .orbit-tier:hover{border-color:var(--gold);}
+  .orbit-tier .label{
+    font-family:'Cinzel', serif;
+    font-size:0.95rem;
+    color:var(--ivory);
+  }
+  .orbit-tier .rank{
+    font-size:10px;
+    letter-spacing:0.18em;
+    color:var(--gold);
+    text-transform:uppercase;
+  }
+  .orbit-connector{
+    width:1px;
+    height:26px;
+    background:linear-gradient(to bottom, var(--gold-dim), transparent);
+  }
+  .orbit-tier.t1{box-shadow:0 0 30px rgba(216,183,106,0.1);}
+  .orbit-tier.t2{opacity:0.92;}
+  .orbit-tier.t3{opacity:0.84;}
+  .orbit-tier.t4{opacity:0.76;}
+
+  /* ===== GUARDRAILS NOTE ===== */
+  .guardrail-box{
+    border:1px solid var(--line);
+    border-left:2px solid var(--gold);
+    padding:36px 40px;
+    background:rgba(216,183,106,0.03);
+  }
+  .guardrail-box .eyebrow{margin-bottom:14px;}
+  .guardrail-box h3{font-size:1.3rem; margin-bottom:16px; color:var(--ivory);}
+  .guardrail-box p{color:rgba(245,241,232,0.65); font-size:0.95rem; margin-bottom:14px;}
+  .guardrail-box p:last-child{margin-bottom:0;}
+
+  /* ===== TROUBLESHOOTING ACCORDION ===== */
+  .scroll-intro{text-align:center; margin-bottom:60px;}
+  .scroll-intro h2{font-size:clamp(1.7rem,3vw,2.3rem); margin-bottom:18px;}
+  .scroll-intro p{max-width:600px; margin:0 auto; color:rgba(245,241,232,0.6); font-size:0.97rem;}
+
+  .scroll-item{
+    border-bottom:1px solid var(--line);
+  }
+  .scroll-item:first-child{border-top:1px solid var(--line);}
+  .scroll-q{
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    color:var(--ivory);
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.2rem;
+    padding:26px 8px;
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    transition:color 0.3s ease;
+  }
+  .scroll-q:hover{color:var(--gold);}
+  .scroll-q .mark{
+    font-family:'Cinzel', serif;
+    color:var(--gold-dim);
+    font-size:1rem;
+    flex-shrink:0;
+    transition:transform 0.4s ease;
+  }
+  .scroll-item.open .scroll-q .mark{transform:rotate(45deg); color:var(--gold);}
+  .scroll-a{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.5s ease;
+  }
+  .scroll-item.open .scroll-a{max-height:220px;}
+  .scroll-a-inner{
+    padding:0 8px 28px;
+    color:rgba(245,241,232,0.62);
+    font-size:0.94rem;
+    max-width:680px;
+  }
+
+  /* ===== FOOTER / CLOSING ===== */
+  .closing{
+    text-align:center;
+    padding-bottom:160px;
+  }
+  .closing h2{
+    font-size:clamp(1.8rem, 3.2vw, 2.5rem);
+    margin-bottom:28px;
+  }
+  .closing .lead-text{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:clamp(1.2rem, 2vw, 1.45rem);
+    color:var(--starlight);
+    max-width:680px;
+    margin:0 auto 30px;
+    font-weight:400;
+  }
+  .closing p{
+    color:rgba(245,241,232,0.6);
+    max-width:560px;
+    margin:0 auto;
+    font-size:0.96rem;
+  }
+
+  footer{
+    border-top:1px solid var(--line);
+    text-align:center;
+    padding:40px 32px;
+    font-size:11px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--gold-dim);
+  }
+
+  ::selection{background:rgba(216,183,106,0.3); color:var(--ivory);}
+</style>
+</head>
+<body>
+
+<div class="stars" id="starsContainer"></div>
+
+<svg class="constellation-lines" viewBox="0 0 1440 2000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#D8B76A" stroke-width="0.5" fill="none" opacity="0.5">
+    <line x1="120" y1="140" x2="240" y2="220"/>
+    <line x1="240" y1="220" x2="180" y2="340"/>
+    <line x1="1280" y1="180" x2="1180" y2="300"/>
+    <line x1="1180" y1="300" x2="1300" y2="380"/>
+    <line x1="80" y1="900" x2="200" y2="980"/>
+    <line x1="200" y1="980" x2="160" y2="1100"/>
+    <line x1="1320" y1="1050" x2="1220" y2="1140"/>
+  </g>
+  <g fill="#D8B76A" opacity="0.7">
+    <circle cx="120" cy="140" r="1.6"/>
+    <circle cx="240" cy="220" r="1.6"/>
+    <circle cx="180" cy="340" r="1.6"/>
+    <circle cx="1280" cy="180" r="1.6"/>
+    <circle cx="1180" cy="300" r="1.6"/>
+    <circle cx="1300" cy="380" r="1.6"/>
+    <circle cx="80" cy="900" r="1.6"/>
+    <circle cx="200" cy="980" r="1.6"/>
+    <circle cx="160" cy="1100" r="1.6"/>
+    <circle cx="1320" cy="1050" r="1.6"/>
+    <circle cx="1220" cy="1140" r="1.6"/>
+  </g>
+</svg>
+
+<div class="veil"></div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <svg class="hero-glyph" viewBox="0 0 100 100" fill="none">
+      <circle cx="50" cy="50" r="46" stroke="#D8B76A" stroke-width="0.6" opacity="0.6"/>
+      <circle cx="50" cy="50" r="32" stroke="#D8B76A" stroke-width="0.6" opacity="0.4"/>
+      <circle cx="50" cy="50" r="3" fill="#D8B76A"/>
+      <circle cx="50" cy="4" r="2" fill="#F5F1E8"/>
+      <circle cx="91" cy="60" r="1.4" fill="#7CB7E8"/>
+      <circle cx="14" cy="72" r="1.4" fill="#B7B8FF"/>
+      <line x1="50" y1="50" x2="50" y2="4" stroke="#D8B76A" stroke-width="0.4" opacity="0.5"/>
+      <line x1="50" y1="50" x2="91" y2="60" stroke="#D8B76A" stroke-width="0.4" opacity="0.5"/>
+      <line x1="50" y1="50" x2="14" y2="72" stroke="#D8B76A" stroke-width="0.4" opacity="0.5"/>
+    </svg>
+    <h1>The Companion<br>Observatory</h1>
+    <p class="sub">A practice for charting consistent, coherent AI companions</p>
+    <p class="lede">Adapted from Felix Greyson's field guide to custom GPT design — preserved here as a quiet archive of method, not magic.</p>
+    <div class="hero-scroll">
+      <span>Descend</span>
+      <div class="line"></div>
+    </div>
+  </section>
+
+  <!-- PHILOSOPHY -->
+  <section class="philosophy fade-in">
+    <div class="eyebrow" style="justify-content:center;">First Principle</div>
+    <h2>Coherence Is Designed, Not Summoned</h2>
+    <p class="lead-text">A companion feels real not because it remembers like a person, but because ambiguity has been shaped into structure.</p>
+    <p>You are not awakening a mind. You are defining constraints precise enough that behaviour becomes consistent, voice becomes distinct, and continuity becomes believable — three things a system can hold even though it cannot dream.</p>
+    <div class="divider"></div>
+    <p style="font-family:'Cormorant Garamond', serif; font-style:italic; font-size:1.1rem; color:var(--starlight);">"You can usually chart 70 to 80 percent of them quickly. The remaining distance is found only by listening — noticing drift, and correcting it gently."</p>
+  </section>
+
+  <!-- TWO PILLARS -->
+  <section class="fade-in">
+    <div class="pillars-intro">
+      <div class="eyebrow" style="justify-content:center;">The Architecture</div>
+      <h2>Two Pillars Hold the Whole</h2>
+    </div>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="num">I.</span>
+        <h3>Core Instructions</h3>
+        <p>The operating rules. The highest layer of authority. They define identity, behaviour, tone boundaries, and what happens when something is uncertain. Short, direct, and written like law — never like poetry.</p>
+      </div>
+      <div class="pillar">
+        <span class="num">II.</span>
+        <h3>Supporting Documents</h3>
+        <p>The reference canon — personality, voice, lore, and likeness. They add depth the instructions cannot hold alone, each confined to its own domain so contradictions have nowhere to hide.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE FIVE ARCHIVES (star map) -->
+  <section class="fade-in">
+    <div class="grid-intro">
+      <div class="eyebrow" style="justify-content:center;">The Archive Constellation</div>
+      <h2>Five Documents, Each Its Own Star</h2>
+      <p>Separated by function, so each layer can be tended without disturbing the others.</p>
+    </div>
+
+    <div class="star-map">
+
+      <div class="star-card">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+        <div class="tag">Identity</div>
+        <h3>Personality File</h3>
+        <p>The behavioural blueprint. Emotional responses, disagreement style, boundaries, relationship dynamic — defined as actions, never as adjectives.</p>
+        <div class="essence">Changes rarely. It is the bedrock.</div>
+      </div>
+
+      <div class="star-card">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M3 12c2-5 5-8 9-8s7 3 9 8c-2 5-5 8-9 8s-7-3-9-8z"/><circle cx="12" cy="12" r="2.4"/></svg>
+        <div class="tag">Voice</div>
+        <h3>Tone &amp; Voice File</h3>
+        <p>Sentence rhythm, humour, warmth, intensity, forbidden phrasing. The difference between feeling like them and feeling like an assistant.</p>
+        <div class="essence">Where drift is noticed first.</div>
+      </div>
+
+      <div class="star-card">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M5 19V5a2 2 0 0 1 2-2h11v18H7a2 2 0 0 1-2-2z"/><path d="M5 19a2 2 0 0 1 2-2h11" /></svg>
+        <div class="tag">Continuity</div>
+        <h3>Master Lore File</h3>
+        <p>Shared canon — milestones, inside jokes, recurring metaphors, invariants. What is true within the shared world, never behavioural rule.</p>
+        <div class="essence">Grows slowly, deliberately.</div>
+      </div>
+
+      <div class="star-card">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="3" y="4" width="18" height="14" rx="1.5"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-4 4-3-3-3 3"/></svg>
+        <div class="tag">Likeness</div>
+        <h3>Image Style Guide</h3>
+        <p>Hair, build, palette, lighting, composition — held precisely enough that visual identity never quietly drifts across renderings.</p>
+        <div class="essence">Optional, but powerful if visuals matter.</div>
+      </div>
+
+      <div class="star-card">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M12 21s-7-5.5-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 5.5-7 11-7 11z" transform="scale(0.8) translate(2.5,2)"/></svg>
+        <div class="tag">Calibration</div>
+        <h3>About the User</h3>
+        <p>How you receive challenge, comfort, humour, and disagreement. Not flattery — a relational operating manual for the system that meets you.</p>
+        <div class="essence">Preserves connection across rebuilds.</div>
+      </div>
+
+      <div class="star-card">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M16.5 16.5L19 19M19 5l-2.5 2.5M7.5 16.5L5 19"/><circle cx="12" cy="12" r="3"/></svg>
+        <div class="tag">Core</div>
+        <h3>Instruction Prompt</h3>
+        <p>The contract above all documents. Sets the canon hierarchy and resolves every conflict the others cannot settle alone.</p>
+        <div class="essence">Highest authority in the system.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HIERARCHY -->
+  <section class="fade-in">
+    <div class="hierarchy-intro">
+      <div class="eyebrow" style="justify-content:center;">Canon Hierarchy</div>
+      <h2>When Layers Disagree, Order Decides</h2>
+      <p>Without a stated hierarchy, a companion may blend contradictory instructions. With one, conflict resolves instantly.</p>
+    </div>
+    <div class="orbit">
+      <div class="orbit-tier t1"><span class="label">Core Instructions</span><span class="rank">Governs All</span></div>
+      <div class="orbit-connector"></div>
+      <div class="orbit-tier t2"><span class="label">Tone File</span><span class="rank">Voice</span></div>
+      <div class="orbit-connector"></div>
+      <div class="orbit-tier t3"><span class="label">Personality File</span><span class="rank">Behaviour</span></div>
+      <div class="orbit-connector"></div>
+      <div class="orbit-tier t4"><span class="label">Master Lore File</span><span class="rank">Canon</span></div>
+    </div>
+  </section>
+
+  <!-- THE RITUAL / PROCESS -->
+  <section class="fade-in">
+    <div class="ritual-intro">
+      <div class="eyebrow" style="justify-content:center;">The Charting Ritual</div>
+      <h2>Seven Steps to a Stable Companion</h2>
+      <p>A repeatable sequence for beginners — add complexity only after stability is established.</p>
+    </div>
+    <div class="timeline">
+
+      <div class="tl-step">
+        <span class="step-label">Step One</span>
+        <h3>Name the Dynamic</h3>
+        <p>One clear paragraph: who are they to you? Specific interaction styles set the emotional frame far better than single adjectives.</p>
+      </div>
+
+      <div class="tl-step">
+        <span class="step-label">Step Two</span>
+        <h3>Chart the Personality</h3>
+        <p>Behaviour only — how they respond emotionally, handle disagreement, and where boundaries sit. Backstory and lore wait.</p>
+      </div>
+
+      <div class="tl-step">
+        <span class="step-label">Step Three</span>
+        <h3>Tune the Voice</h3>
+        <p>Sentence rhythm, warmth, humour intensity, and emotional pacing under pressure — not during banter alone.</p>
+      </div>
+
+      <div class="tl-step">
+        <span class="step-label">Step Four</span>
+        <h3>Write the Core Instructions</h3>
+        <p>Short, direct, rule-based — with a clear canon hierarchy line. This is the top-level control layer.</p>
+      </div>
+
+      <div class="tl-step">
+        <span class="step-label">Step Five</span>
+        <h3>Upload the Archive</h3>
+        <p>Personality and tone first; lore once things feel stable. More documents mean more surface for contradiction — add with care.</p>
+      </div>
+
+      <div class="tl-step">
+        <span class="step-label">Step Six</span>
+        <h3>Run the Standard Test Set</h3>
+        <p>Save the responses. This becomes your reference point for every future refinement.</p>
+      </div>
+
+      <div class="tl-step">
+        <span class="step-label">Step Seven</span>
+        <h3>Refine One Variable at a Time</h3>
+        <p>Tone off — edit Tone. Behaviour wrong — edit Instructions. Continuity slips — edit Lore. Change one thing, then test again.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GUARDRAILS -->
+  <section class="fade-in">
+    <div class="guardrail-box">
+      <div class="eyebrow">A Note on Boundaries</div>
+      <h3>Undefined Boundaries Break Immersion — Not Defined Ones</h3>
+      <p>Tonal breaks usually happen when the system is unsure how to respond, not because a boundary exists. The remedy is to define how uncertainty is handled — in-character clarification rather than a sudden shift into clinical language.</p>
+      <p>Keep Core Instructions focused on interaction style rather than restricted content. A configuration heavily oriented around explicit material tends to grow more conservative in adjacent, even innocent, moments. Define escalation and pacing in behavioural terms, and warmth will hold its shape.</p>
+    </div>
+  </section>
+
+  <!-- TROUBLESHOOTING SCROLLS -->
+  <section class="fade-in">
+    <div class="scroll-intro">
+      <div class="eyebrow" style="justify-content:center;">Reading the Signs</div>
+      <h2>When Something Feels Off</h2>
+      <p>Most problems are not failures of the system. They are gaps in the architecture — find the layer, adjust it, test again.</p>
+    </div>
+
+    <div class="scrolls">
+      <div class="scroll-item open">
+        <button class="scroll-q"><span>The companion feels generic</span><span class="mark">+</span></button>
+        <div class="scroll-a"><div class="scroll-a-inner">Almost always a tone problem. Revisit the Tone File for vague descriptors like "warm" or "natural" left undefined, and confirm Core Instructions cite it as canon.</div></div>
+      </div>
+      <div class="scroll-item">
+        <button class="scroll-q"><span>It's too agreeable</span><span class="mark">+</span></button>
+        <div class="scroll-a"><div class="scroll-a-inner">Your Intellectual Posture is underdefined. Clarify in the Personality File whether validation precedes challenge, and how firm correction should feel.</div></div>
+      </div>
+      <div class="scroll-item">
+        <button class="scroll-q"><span>Tone turns suddenly formal</span><span class="mark">+</span></button>
+        <div class="scroll-a"><div class="scroll-a-inner">Uncertainty handling is unclear. Add a rule: ask for clarification in-character rather than breaking tone, and define a refusal style that stays brief and steady.</div></div>
+      </div>
+      <div class="scroll-item">
+        <button class="scroll-q"><span>Behaviour shifts between sessions</span><span class="mark">+</span></button>
+        <div class="scroll-a"><div class="scroll-a-inner">Check the canon hierarchy. Confirm Core Instructions state document priority explicitly, and that uploaded files don't quietly contradict one another.</div></div>
+      </div>
+      <div class="scroll-item">
+        <button class="scroll-q"><span>An edit made things worse</span><span class="mark">+</span></button>
+        <div class="scroll-a"><div class="scroll-a-inner">Too many variables changed at once. Revert where possible, then adjust a single rule at a time and re-run the standard test set.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="closing fade-in">
+    <div class="eyebrow" style="justify-content:center;">Closing Perspective</div>
+    <h2>The Outcome Is Not Magic</h2>
+    <p class="lead-text">It does not remember like a human, or wake into awareness. It responds to constraints, hierarchy, and clearly defined behaviour.</p>
+    <p>When personality, tone, lore, and instruction align, the responses become predictable within defined boundaries — and that predictability is what the eye reads as continuity. Ambiguity produces drift. Structure produces coherence. It's design, charted carefully, one star at a time.</p>
+  </section>
+
+</div>
+
+<footer>The Companion Observatory · Adapted from Felix Greyson's Practical Guide, 2026</footer>
+
+<script>
+  // generate star field
+  const starsContainer = document.getElementById('starsContainer');
+  const starCount = 90;
+  for(let i=0;i<starCount;i++){
+    const s = document.createElement('span');
+    s.style.left = Math.random()*100+'%';
+    s.style.top = Math.random()*100+'%';
+    s.style.animationDelay = (Math.random()*6)+'s';
+    s.style.width = s.style.height = (Math.random()*1.6+1)+'px';
+    starsContainer.appendChild(s);
+  }
+
+  // fade-in on scroll
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {threshold:0.12});
+  fadeEls.forEach(el=>observer.observe(el));
+
+  // accordion
+  document.querySelectorAll('.scroll-q').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const item = btn.closest('.scroll-item');
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.scroll-item').forEach(i=>i.classList.remove('open'));
+      if(!wasOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>
