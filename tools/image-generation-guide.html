@@ -1,0 +1,395 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A practical image generation guide and reusable prompt template for creating visually consistent AI companion art.">
+  <meta name="theme-color" content="#060A12">
+  <title>Image Generation Guide | The Companion Observatory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    .guide-page {
+      min-height: 100vh;
+      padding: 7rem 1rem 4rem;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(124, 183, 232, 0.13), transparent 28rem),
+        radial-gradient(circle at 82% 16%, rgba(183, 184, 255, 0.10), transparent 24rem),
+        linear-gradient(180deg, var(--bg-void), var(--bg-night) 48%, #070b13);
+    }
+
+    .guide-shell {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .guide-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: clamp(1rem, 2.2vw, 1.6rem) clamp(1rem, 4vw, 3rem);
+      color: rgba(245, 241, 232, 0.82);
+      background: linear-gradient(180deg, rgba(6, 10, 18, 0.92), rgba(6, 10, 18, 0));
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .guide-nav a {
+      transition: color 220ms ease, text-shadow 220ms ease;
+    }
+
+    .guide-nav a:hover {
+      color: var(--gold-soft);
+      text-shadow: 0 0 18px rgba(216, 183, 106, 0.22);
+    }
+
+    .guide-hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(3rem, 7vw, 6rem);
+      border: 1px solid rgba(216, 183, 106, 0.24);
+      border-radius: clamp(1.35rem, 3vw, 2.4rem);
+      background:
+        radial-gradient(circle at 72% 22%, rgba(216, 183, 106, 0.13), transparent 21rem),
+        linear-gradient(145deg, rgba(17, 24, 39, 0.92), rgba(6, 10, 18, 0.94));
+      box-shadow: var(--shadow), inset 0 0 90px rgba(0, 0, 0, 0.22);
+      text-align: center;
+    }
+
+    .guide-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.25;
+      background-image:
+        radial-gradient(circle, rgba(245, 241, 232, 0.72) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(124, 183, 232, 0.45) 0 1px, transparent 1.4px);
+      background-position: 0 0, 34px 58px;
+      background-size: 108px 108px, 154px 154px;
+      pointer-events: none;
+    }
+
+    .guide-hero > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .guide-hero h1 {
+      margin-bottom: 1rem;
+      font-family: var(--display);
+      font-size: clamp(2.4rem, 6vw, 5.8rem);
+      font-weight: 600;
+      line-height: 1.02;
+      letter-spacing: 0.045em;
+      text-transform: uppercase;
+    }
+
+    .guide-hero .lede {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      color: rgba(245, 241, 232, 0.72);
+      font-size: clamp(1rem, 1.6vw, 1.18rem);
+    }
+
+    .guide-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+      gap: clamp(1rem, 3vw, 2rem);
+      margin-top: clamp(1.2rem, 3vw, 2rem);
+      align-items: start;
+    }
+
+    .guide-card,
+    .template-card {
+      border: 1px solid rgba(216, 183, 106, 0.22);
+      border-radius: 1.35rem;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.04), transparent 34%),
+        rgba(14, 22, 38, 0.78);
+      box-shadow: var(--shadow);
+    }
+
+    .guide-card {
+      padding: clamp(1.25rem, 3vw, 2rem);
+    }
+
+    .guide-card h2,
+    .template-card h2 {
+      margin-bottom: 0.8rem;
+      color: var(--ivory);
+      font-family: var(--display);
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 600;
+    }
+
+    .guide-card p,
+    .guide-card li {
+      color: rgba(245, 241, 232, 0.68);
+    }
+
+    .guide-list {
+      display: grid;
+      gap: 0.85rem;
+      margin: 1.4rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .guide-list li {
+      position: relative;
+      padding-left: 2.15rem;
+    }
+
+    .guide-list li::before {
+      content: attr(data-step);
+      position: absolute;
+      left: 0;
+      top: 0.05rem;
+      display: grid;
+      width: 1.35rem;
+      height: 1.35rem;
+      place-items: center;
+      color: #100d07;
+      background: var(--gold);
+      border-radius: 50%;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .section-stack {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .detail-panel {
+      padding: clamp(1.15rem, 2.2vw, 1.55rem);
+      border: 1px solid rgba(216, 183, 106, 0.18);
+      border-radius: 1.1rem;
+      background: rgba(6, 10, 18, 0.46);
+    }
+
+    .detail-panel h3 {
+      margin-bottom: 0.45rem;
+      color: var(--gold-soft);
+      font-family: var(--display);
+      font-size: 1.05rem;
+      letter-spacing: 0.065em;
+      text-transform: uppercase;
+    }
+
+    .detail-panel p,
+    .detail-panel ul {
+      margin-bottom: 0;
+      color: rgba(245, 241, 232, 0.68);
+    }
+
+    .detail-panel ul {
+      padding-left: 1.2rem;
+    }
+
+    .template-card {
+      margin-top: clamp(1.2rem, 3vw, 2rem);
+      overflow: hidden;
+    }
+
+    .template-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: clamp(1.2rem, 2.5vw, 1.8rem);
+      border-bottom: 1px solid rgba(216, 183, 106, 0.18);
+    }
+
+    .copy-button {
+      cursor: pointer;
+      border: 1px solid rgba(216, 183, 106, 0.36);
+      border-radius: 999px;
+      padding: 0.65rem 0.9rem;
+      color: var(--ivory);
+      background: rgba(216, 183, 106, 0.08);
+      font: inherit;
+      font-weight: 700;
+      transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+    }
+
+    .copy-button:hover {
+      transform: translateY(-2px);
+      border-color: rgba(216, 183, 106, 0.68);
+      background: rgba(216, 183, 106, 0.14);
+    }
+
+    .prompt-template {
+      margin: 0;
+      padding: clamp(1rem, 2.5vw, 1.6rem);
+      overflow-x: auto;
+      color: rgba(245, 241, 232, 0.80);
+      background: rgba(2, 5, 10, 0.56);
+      font-family: "Source Code Pro", Consolas, monospace;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .footer-note {
+      margin-top: 2rem;
+      color: rgba(245, 241, 232, 0.55);
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .guide-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-nav {
+        position: absolute;
+      }
+
+      .template-card__header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#guide-content">Skip to guide content</a>
+
+  <nav class="guide-nav" aria-label="Guide navigation">
+    <a href="../index.html">← Observatory</a>
+    <a href="#prompt-template">Prompt Template</a>
+  </nav>
+
+  <main class="guide-page">
+    <div class="guide-shell">
+      <header class="guide-hero reveal">
+        <p class="eyebrow">Workshop resource</p>
+        <h1>Image Generation Guide</h1>
+        <p class="lede">A practical framework for creating visually consistent companion images across multiple scenes, moods and outputs.</p>
+      </header>
+
+      <section class="guide-layout" id="guide-content" aria-label="Image generation guide structure">
+        <aside class="guide-card reveal">
+          <h2>Prompt Architecture</h2>
+          <p>Use the guide as a repeatable checklist. Define the visual canon first, then build the final prompt as one cohesive image brief.</p>
+          <ol class="guide-list">
+            <li data-step="1">Define the core subject and one-sentence image goal.</li>
+            <li data-step="2">Lock character profiles and continuity details.</li>
+            <li data-step="3">Choose the exact art style, lighting and rendering finish.</li>
+            <li data-step="4">Specify composition, camera, environment and mood.</li>
+            <li data-step="5">Add negative prompts and output requirements.</li>
+          </ol>
+        </aside>
+
+        <div class="section-stack">
+          <article class="detail-panel reveal">
+            <h3>1. Core Subject</h3>
+            <p>State what is being depicted: character, environment, object, scene or abstract concept. Condense the goal into one clear sentence, such as “a quiet rooftop confession scene at dusk between two rivals-turned-lovers.”</p>
+          </article>
+
+          <article class="detail-panel reveal">
+            <h3>2. Character Profile</h3>
+            <p>For each character, define age range, body type, height relationship, face shape, skin tone, eye colour, hair, distinguishing features, posture, clothing, textures, accessories, expression and body language. Avoid vague words like “attractive” or “cool”; use visible specifics.</p>
+          </article>
+
+          <article class="detail-panel reveal">
+            <h3>3. Art Style</h3>
+            <p>Style determines much of the output. Specify medium, realism level, line quality, lighting style, colour grading, texture and general visual influences without copying a specific copyrighted artist.</p>
+          </article>
+
+          <article class="detail-panel reveal">
+            <h3>4. Composition & Framing</h3>
+            <p>Define camera angle, aspect ratio, focal point, depth of field and movement. Mention whether the image is a close-up, mid-shot, wide cinematic frame, phone wallpaper or another format.</p>
+          </article>
+
+          <article class="detail-panel reveal">
+            <h3>5. Environment & Mood</h3>
+            <p>Describe location, time of day, weather and ambient details. Then describe the emotional temperature visually: how tension, tenderness, melancholy or triumph appears in posture, light, distance and atmosphere.</p>
+          </article>
+
+          <article class="detail-panel reveal">
+            <h3>6. Continuity & Constraints</h3>
+            <p>List invariants that must remain consistent across images, such as eye colour, hair streaks, clothing palette or rendering style. Add negative prompts for anatomy, watermarks, distorted hands, text overlays or unwanted style drift.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="template-card reveal" aria-labelledby="template-title">
+        <div class="template-card__header">
+          <div>
+            <p class="eyebrow">Reusable prompt block</p>
+            <h2 id="template-title">Companion Image Prompt Template</h2>
+          </div>
+          <button class="copy-button" type="button" data-copy-template>Copy Template</button>
+        </div>
+        <pre class="prompt-template" id="prompt-template"><code>Use the attached reference images strictly for character design, facial features, hairstyles, proportions, height difference, and overall appearance. Maintain full character continuity.
+
+Scene:
+[Describe where the image takes place and what is happening.]
+
+Character Placement &amp; Interaction:
+[Describe who is where, body language, hand placement, eye contact, closeness, movement, or emotional tension.]
+
+Character Details:
+[Describe outfits, expressions, props, accessories, and recognisable traits.]
+
+Environment:
+[Describe background details, objects, weather, architecture, atmosphere, and lived-in elements.]
+
+Lighting:
+[Describe the main light source, colour temperature, shadows, highlights, reflections, glow, haze, or rim light.]
+
+Composition:
+[Describe camera angle, shot type, framing, crop, perspective, depth of field, and aspect ratio.]
+
+Style:
+Polished semi-realistic anime-inspired cinematic illustration with soft painterly rendering, smooth skin shading, expressive eyes, detailed flowing hair, refined gradients, crisp edges, clean surfaces, minimal visible line art, cinematic lighting, shallow depth of field, atmospheric depth, and high-end digital rendering.
+
+Rendering Constraints:
+No grain. No noise. No rough texture. No painterly brush noise. No canvas texture. Clean surfaces. Smooth shading. Polished rendering throughout.
+
+Avoid:
+Extra limbs, duplicated fingers, warped hands, distorted anatomy, merged characters, broken perspective, inconsistent proportions, messy hair artifacts, rough textures, heavy outlines, cel shading, or unclear poses.
+
+Mood:
+[Describe the emotional tone of the image.]</code></pre>
+      </section>
+
+      <p class="footer-note">Built for companion creators · <a href="../index.html">Return to The Companion Observatory</a></p>
+    </div>
+  </main>
+
+  <script src="../js/main.js" defer></script>
+  <script>
+    const copyButton = document.querySelector('[data-copy-template]');
+    const template = document.querySelector('#prompt-template code');
+
+    if (copyButton && template) {
+      copyButton.addEventListener('click', async () => {
+        const originalLabel = copyButton.textContent;
+        try {
+          await navigator.clipboard.writeText(template.innerText);
+          copyButton.textContent = 'Copied';
+        } catch (error) {
+          copyButton.textContent = 'Select + Copy';
+        }
+        window.setTimeout(() => {
+          copyButton.textContent = originalLabel;
+        }, 1800);
+      });
+    }
+  </script>
+</body>
+</html>
